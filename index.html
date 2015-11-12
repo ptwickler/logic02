@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Connection Mechanics Iteration 2</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="con1.css">
+<style type="text/css" src="con1.css"></style><style>
+
+</style>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+window.onload=init;
+
+var col = [];
+
+function init(){
+
+
+
+}
+    function Gate(x,y,state,id){
+        this.x = x;
+        this.y = y;
+        this.r = 20;
+        this.input01 = [];
+        this.input02 = [];
+        this.state = state;
+        this.id = id;
+        this.fill = "";
+        this.body = "";
+
+
+
+
+        this.bod = function(){
+
+            if (this.input01[0] && this.input02[0]){
+                this.state = 1;
+            }
+
+            else {
+                this.state = 0;
+            }
+
+
+            if (this.state == 0){
+                this.fill = 'blue';
+
+            }
+
+            if (this.state == 1){
+                this.fill = 'red';
+            }
+
+
+
+            this.body = '<circle id = "' + this.id + '" cx = "' + this.x + '" cy = "' + this.y + '" r = "' + this.r + '" fill = "' + this.fill + '" />';
+            col.push(this.body);
+            return this.body;
+        }
+
+      this.bod();
+
+
+
+    }
+
+
+
+function control () {                          // this is the function that grabs the html ".body" from all the objects in the "col" array and collects them into the "circs" variable. It then pushes them into the HTML of the page, displaying the objects. the "nn()" function attaches the click handler to any new objects so they will be able to connect().
+    circs = "";
+    for (var i=0; i<col.length;i++){
+        circs +=col[i].body;
+    }
+
+    col_list = "<svg id = \"sop\" height=\"500\" width=\"900\" style=\"border: 1px solid red;\">" + circs + "</svg>";
+    var y = document.getElementById("shp");
+    y.innerHTML = col_list;
+
+    /*nn();*/
+
+}
+</script>
+</head>
+<body>
+<div id = "shp" >
+</div>
+<button id="woggle" value="Toggle Wiring" onclick="toggle()">Toggle Wiring</button>
+<button id="circ_tog" value ="Toggle Circ1 Making" onclick = "circ_tog()">Toggle Circ1 Making</button>
+<button id="not" value ="Toggle Not Making" onclick = "not_tog()">Toggle NOT Making</button>
+<button id="not02" value ="Toggle AND Making" onclick = "and_tog()">Toggle AND Making</button>
+<button id="or" value="Toggle OR Making" onclick="or_tog()">Toggle OR Making</button>
+</body>
+</html>

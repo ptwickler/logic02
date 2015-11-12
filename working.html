@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Connection Mechanics Iteration 2</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="con1.css">
+<style type="text/css" src="con1.css"></style><style>
+
+</style>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+window.onload=init;
+
+function init(){
+    h = new Circ1(0,0, 0, 0, "h");		                  //This function just sets up the screen with some gates so I can practice connecting them and thinking.
+    t = new Circ1(150,150, 20, 0, "t");
+    t.make();
+    w = new Circ1(150, 300, 20, 0, "w");
+    w.make();
+    wt = 0;
+
+
+}
+
+
+function toggle(){               //this turns on and off the old fashioned wire-making function. I will adapt this to the new array of gate-making buttons.
+    if (wt%2==0){
+        $("#shp").attr("onmousedown", "line_e(event)");
+    }
+
+    if (wt%2!=0){
+        $("#shp").attr("onmousedown", "");
+    }
+
+    wt++;
+
+}
+
+function circ_tog(){               //this turns on and off the simple Circ1 making function. I will adapt this to the new array of gate-making buttons.
+    if (wt%2==0){
+        $("#shp").attr("onmousedown", "circ_e(event)");
+    }
+
+    if (wt%2!=0){
+        $("#shp").attr("onmousedown", "");
+    }
+
+    wt++;
+
+}
+
+function not_tog(){               //this turns on and off the NOT making function. I will adapt this to the new array of gate-making buttons.
+    if (wt%2==0){
+        $("#shp").attr("onmousedown", "not_e(event)");
+    }
+
+    if (wt%2!=0){
+        $("#shp").attr("onmousedown", "");
+    }
+
+    wt++;
+
+}
+
+function and_tog(){               //this turns on and off AND making function. I will adapt this to the new array of gate-making buttons.
+    if (wt%2==0){
+        $("#shp").attr("onmousedown", "and_e(event)");
+    }
+
+    if (wt%2!=0){
+        $("#shp").attr("onmousedown", "");
+    }
+
+    wt++;
+
+}
+
+function or_tog(){               //this turns on and off AND making function. I will adapt this to the new array of gate-making buttons.
+    if (wt%2==0){
+        $("#shp").attr("onmousedown", "or_e(event)");
+    }
+
+    if (wt%2!=0){
+        $("#shp").attr("onmousedown", "");
+    }
+
+    wt++;
+
+}
+var Circ1 = function(x,y,r,state,id){
+    this.x = x;
+    this.y =y;
+    this.r = r;
+    this.fill = "red";
+    this.id = id;
+    this.out_state = 0;
+    this.state = state;
+    this.inputs = [];
+    this.outputs = [];
+    this.body ="" ;
+
+    this.hand = function() {
+        bin.push(this);
+    };
+
+    this.connect = function(gate, gate_put){   //tells one gate to listen to the output of another
+        gate_put.push(gate);
+        this.bod();
+    };
+
+    this.disconnect = function(gate, gate_put){
+        gate_put.splice(gate_put.indexOf(gate), 1);
+
+        this.bod();
+    };
+
+
+
+    this.recieve = function (state) {
+        this.state = state;
+        this.bod();
+        this.transmit(state);
+    };
+
+    this.transmit= function(state){
+        for (var i=0; i<this.outputs.length;i++) {
+            this.outputs[i].recieve(state);
+            this.bod();
+        }
+    };
+
+
+    this.bod = function () {                       //this is the method that creates the body of the circle object.
+        if (this.state == 0){                      // this if statement sets fill to blue if the state property is "0"'
+            this.fill = "blue";
+            this.out_state = 0;
+        }
+
+        if (this.state==2){                       // this if statement sets the fill to red if the state property is 1
+            this.fill="green";
+            this.out_state = 2;
+        }
+
+
+        if (this.state==1){                       // this if statement sets the fill to red if the state property is 1
+            this.fill="red";
+            this.out_state = 1;
+        }
+
+        this.body = "<circle cx=\"" + this.x + "\" cy=\"" + this.y + "\" r=\"" + this.r + "\" fill=\"" +  this.fill + "\" id=\"" + this.id + "\" class=\"put\"     />";
+
+
+
+        tell();
+    };
+
+    this.make = function(){
+        this.bod()
+        col.push(this);
+
+        tell();
+    };
+
+
+
+}                          // this is the prototypical object (not literally). It receives 1 and outs 1, in 0 out 0. 0 = blue, 1 = red.
+
+var Not  = function(x,y,r,state,id){
+    this.x = x;
+    this.y =y;
+    this.r = r;
+    this.fill = "red";
+    this.id = id;
+    this.out_state = 0;
+    this.state = state;
+    this.inputs = [];
+    this.outputs = [];
+    this.body ="" ;
+
+    this.hand = function() {
+        bin.push(this);
+    };
+
+    this.connect = function(gate, gate_put){   //tells one gate to listen to the output of another
+        gate_put.push(gate);
+        this.bod();
+    };
+
+    this.disconnect = function(gate, gate_put){
+        gate_put.splice(gate_put.indexOf(gate), 1);
+
+        this.bod();
+    };
+
+
+
+    this.recieve = function (state) {
+        var temp  = state;
+        if(temp == 0){
+            this.state = 1;
+        }
+
+        if (temp == 1){
+            this.state = 0;
+        }
+        this.bod();
+
+        this.transmit(this.state);
+    };
+
+    this.transmit= function(state){
+        for (var i=0; i<this.outputs.length;i++) {
+            this.outputs[i].recieve(state);
+            this.bod();
+        }
+    };
+
+
+    this.bod = function () {                       //this is the method that creates the body of the circle object.
+        if (this.state == 0){                      // this if statement sets fill to blue if the state property is "0"'
+            this.fill = "blue";
+            this.out_state = 0;
+        }
+
+        if (this.state==2){                       // this if statement sets the fill to red if the state property is 1
+            this.fill="green";
+            this.out_state = 2;
+        }
+
+
+        if (this.state==1){                       // this if statement sets the fill to red if the state property is 1
+            this.fill="red";
+            this.out_state = 1;
+        }
+
+        this.body = "<circle cx=\"" + this.x + "\" cy=\"" + this.y + "\" r=\"" + this.r + "\" fill=\"" +  this.fill + "\" id=\"" + this.id + "\" class=\"put\"     />";
+
+
+
+        tell();
+    };
+
+    this.make = function(){
+        this.bod()
+        col.push(this);
+
+        tell();
+    };
+
+
+
+}                          // this is the object constructor for the NOT gate. In 0, out 1. In 1, out 0. 1 = red, 0 = blue.
+
+var And = function(x,y,r,state,id){                              // This is the object constructor for the AND gate. i
+    this.x = x;
+    this.y =y;
+    this.r = r;
+    this.fill = "red";
+    this.id = id;
+    this.instate1 ;
+    this.instate2  ;
+    this.out_state = 0;
+    this.state = state;
+    // this.pos = col.length;
+    this.inputs = [];
+    this.outputs = [];
+    this.body ="" ;
+
+    this.connect = function(gate, gate_put){   //tells one gate to listen to the output of another
+        gate_put.push(gate);
+        this.bod();
+    };
+
+    this.disconnect = function(gate, gate_put){
+        gate_put.splice(gate_put.indexOf(gate), 1);
+        this.bod();
+    };
+
+    this.recieve = function (state) {
+
+        if (!this.instate1  && !this.instate2){
+            this.instate1 = state;
+        }
+        else if (this.instate1 && !this.instate2){
+            this.instate2 = state;
+        }
+        else{
+
+            if(state == 0){
+                if(this.instate1 ==0 && this.instate2 ==1){
+                    this.instate2 = 0;
+                }
+                else if(this.instate1 ==1 && this.instate2 ==0){
+                    this.instate1 =0;
+                }
+
+                else {
+                    this.instate1 =0;
+                }
+            }
+
+            if (state ==1){
+                if(this.instate1 ==0 && this.instate2 ==1){
+                    this.instate1 =1;
+                }
+                else if (this.instate1 ==1 && this.instate2 ==0){
+                    this.instate2 = 1;
+                }
+
+            }
+        }
+
+        this.bod();
+        var sts = this.state;
+        this.transmit(sts);
+    };
+
+    /* this.recieve = function (state) {
+     this.state = state;
+     this.bod();
+     this.transmit(state);
+     };*/
+    this.transmit= function(state){
+        for (var i=0; i<this.outputs.length;i++) {
+            this.outputs[i].recieve(state);
+            this.bod();
+        }
+    };
+
+
+    this.bod = function () {                       //this is the method that creates the body of the circle object.
+        if (this.instate1 ==1 && this.instate2 ==1){
+            this.state =1;
+        }
+
+        else {
+            this.state =0;
+        }
+        if (this.state == 0){                      // this if statement sets fill to blue if the state property is "0"
+            this.fill = "blue";
+            this.out_state = 0;
+        }
+        if (this.state==1){                       // this if statement sets the fill to red if the state property is 1
+            this.fill="red";
+            this.out_state = 1;
+        }
+
+        this.body = "<circle cx=\"" + this.x + "\" cy=\"" + this.y + "\" r=\"" + this.r + "\" fill=\"" +  this.fill + "\" id=\"" + this.id + "\" class = \"put\">AND</circle>";
+
+        tell();
+
+
+        //control(this); /// instead of pushing the gate to the col[], somehow alert the control that it needs to cycle through the objects and replace each body with the new body.
+    };
+
+    this.make = function(){
+        this.bod()
+        col.push(this);
+        tell();
+    };
+}
+
+var Or = function(x,y,r,state,id){                              // This is the object constructor for the AND gate. i
+    this.x = x;
+    this.y =y;
+    this.r = r;
+    this.fill = "red";
+    this.id = id;
+    this.instate1   ;
+    this.instate2  ;
+    this.out_state = 0;
+    this.state = state;
+    // this.pos = col.length;
+    this.inputs = [];
+    this.outputs = [];
+    this.body ="" ;
+
+    this.connect = function(gate, gate_put){   //tells one gate to listen to the output of another
+        gate_put.push(gate);
+        this.bod();
+    };
+
+    this.disconnect = function(gate, gate_put){
+        gate_put.splice(gate_put.indexOf(gate), 1);
+        this.bod();
+    };
+
+    this.recieve = function (state) {       // the problem is that i need to make sure that each input turns on or off one of the instates. So that a 0 input twice from the same input doesn't change both instates. One input changes only one instate to 0 or 1, not either.
+        if (state == 0){
+            if (!this.instate1 && !this.instate2) { // Maybe set it up so that when it receives it puts sets the value of one of the instates to the object or the state of the object that transmits it.<<skdjfdlsf
+                this.instate1
+            }
+        }
+
+    }
+
+    /*
+     if (!this.instate1 && !this.instate2){
+     this.instate1 = state;
+
+     }
+
+     else if (!this.instate1 && this.instate2){
+     this.instate1 = state;
+     }
+
+     else if (this.instate1 && !this.instate2) {
+     this.instate2 = state;
+
+
+
+     }
+     */
+
+
+    this.bod();
+    var sts = this.state;
+    this.transmit(sts);
+};
+
+/* this.recieve = function (state) {
+ this.state = state;
+ this.bod();
+ this.transmit(state);
+ };*/
+this.transmit= function(state){
+    for (var i=0; i<this.outputs.length;i++) {
+        this.outputs[i].recieve(state);
+        this.bod();
+    }
+};
+
+
+this.bod = function () {
+    if (this.instate1 ==1 || this.instate2 ==1){
+        this.state =1;
+    }
+
+    else {
+        this.state =0;
+    }
+    if (this.state == 0){                      // this if statement sets fill to blue if the state property is "0"
+        this.fill = "blue";
+        this.out_state = 0;
+    }
+    if (this.state==1){                       // this if statement sets the fill to red if the state property is 1
+        this.fill="red";
+        this.out_state = 1;
+    }
+
+    this.body = "<circle cx=\"" + this.x + "\" cy=\"" + this.y + "\" r=\"" + this.r + "\" fill=\"" +  this.fill + "\" id=\"" + this.id + "\" class = \"put\">OR</circle>";
+
+    tell();
+
+
+    //control(this); /// instead of pushing the gate to the col[], somehow alert the control that it needs to cycle through the objects and replace each body with the new body.
+};
+
+this.make = function(){
+    this.bod()
+    col.push(this);
+    tell();
+};
+
+
+var cou2= 0
+
+function Con(x1, y1, x2,y2, state, id){
+    this.x1 = x1;
+    this.y1 = y1;
+    this.x2 = x2;
+    this.y2 = y2;
+    this.fill = "blue";
+    this.state = 0;
+    this.instate = 0;
+    this.body = "";
+    this.inputs = [];
+    this.outputs = [];
+    this.id = id;
+
+
+    this.connect = function(gate, gate_put){   //tells one gate to listen to the output of another
+        gate_put.push(gate);
+        this.bod();
+    };
+
+    this.disconnect = function(gate, gate_put){
+        gate_put.splice(gate_put.indexOf(gate), 1);
+        this.bod();
+    };
+
+    this.recieve = function (state) {
+        this.state = state;
+        this.bod();
+        this.transmit(state);
+    };
+
+    this.transmit= function(state){
+        for (var i=0; i<this.outputs.length;i++) {
+            this.outputs[i].recieve(state);
+            this.bod();
+        }
+    };
+
+    this.make = function(){
+        this.bod()
+        col.push(this);
+
+        tell();
+    };
+
+    this.bod = function(){
+        if (this.state ==0){
+            this.fill = "blue";
+
+        }
+
+        if (this.state ==1){
+            this.fill = "red";
+        }
+
+        this.body = "<line x1 = \"" + this.x1 + "\" y1 = \"" + this.y1 + "\" x2 = \"" + this.x2 + "\" y2 = \"" + this.y2 + "\" style=\"stroke-width: 2px; stroke: " + this.fill + "\"/>";
+
+        tell();
+
+    };
+
+}         //this is the wire object constructor
+
+col = [];                                            //this is the "master" "collection" array. It holds the objects that are displayed on the screen by the "control" function
+
+function tell() {                                    //this is the function that updates .body html from the objects in col. It is called whenever a change is made like, "make()". Then it calls "control()" to display the changes.
+    for (var i=0; i<col.lenght;i++){
+        col[i].body = col[i].body;
+    }
+
+
+
+    control();
+}
+
+function control () {                          // this is the function that grabs the html ".body" from all the objects in the "col" array and collects them into the "circs" variable. It then pushes them into the HTML of the page, displaying the objects. the "nn()" function attaches the click handler to any new objects so they will be able to connect().
+    circs = "";
+    for (var i=0; i<col.length;i++){
+        circs +=col[i].body;
+    }
+
+    col_list = "<svg id = \"sop\" height=\"500\" width=\"900\" style=\"border: 1px solid red;\">" + circs + "</svg>";
+    var y = document.getElementById("shp");
+    y.innerHTML = col_list;
+
+    nn();
+
+
+}
+
+var ste=[];
+function line_e(e){
+    var cou = 0
+    if (ste.length < 2){
+        var cx = e.pageX - document.getElementById("shp").offsetLeft;
+        var cy = e.pageY  - document.getElementById("shp").offsetTop;
+
+        ste.push(cx);
+        ste.push(cy);
+    }
+
+
+
+    else if (ste.length >= 2){
+
+        var cx = e.pageX - document.getElementById("shp").offsetLeft;
+        var cy = e.pageY - document.getElementById("shp").offsetTop;;
+
+        ste.push(cx);
+        ste.push(cy);
+        var x1 = ste[0];
+        var y1 = ste[1];
+        var x2 = ste[2];
+        var y2 = ste[3];
+        var nt = cou.toString()
+        var n = new Con(x1,y1, x2, y2, 0, nt);
+        n.make();
+        cou++;
+        ste=[];
+    }
+}
+var cou = 0
+var chop=[];
+function circ_e(e){
+
+
+    var cx = e.pageX - document.getElementById("shp").offsetLeft;
+    var cy = e.pageY  - document.getElementById("shp").offsetTop;
+
+    chop.push(cx);
+    chop.push(cy);
+
+
+
+
+    var x1 = chop[0];
+    var y1 = chop[1];
+
+    var nt = String(cou)
+    var n = new Circ1(x1,y1, 20, 0, "source_" + nt);
+    n.make();
+    cou++;
+    chop=[];
+
+}
+
+function not_e(e){
+
+
+    var cx = e.pageX - document.getElementById("shp").offsetLeft;
+    var cy = e.pageY  - document.getElementById("shp").offsetTop;
+
+    chop.push(cx);
+    chop.push(cy);
+
+
+
+
+    var x1 = chop[0];
+    var y1 = chop[1];
+
+    var nt = String(cou)
+    var n = new Not(x1,y1, 10, 0, "source_" + nt);
+    n.make();
+    cou++;
+    chop=[];
+
+}
+
+function and_e(e){
+
+
+    var cx = e.pageX - document.getElementById("shp").offsetLeft;
+    var cy = e.pageY  - document.getElementById("shp").offsetTop;
+
+    chop.push(cx);
+    chop.push(cy);
+
+
+
+
+    var x1 = chop[0];
+    var y1 = chop[1];
+
+    var nt = String(cou)
+    var n = new And(x1,y1, 40, 0, "source_" + nt);   //need to make sure that all these makers actually create unique ids
+    n.make();
+    cou++;
+    chop=[];
+
+}
+
+function or_e(e){
+
+
+    var cx = e.pageX - document.getElementById("shp").offsetLeft;
+    var cy = e.pageY  - document.getElementById("shp").offsetTop;
+
+    chop.push(cx);
+    chop.push(cy);
+
+
+
+
+    var x1 = chop[0];
+    var y1 = chop[1];
+
+    var nt = String(cou)
+    var n = new Or(x1,y1, 40, 0, "source_" + nt);
+    n.make();
+    cou++;
+    chop=[];
+
+}
+var cou = 0;
+function nn() {
+    $(document).ready(function(){            // this is the connector that lets you click on a gate to connect it to another gate
+        var $col = $(col);
+        $(".put").on("click", function(event){
+            evt = event.target;
+            if (bin.length < 2){  // bin is the "hopper" that holds the two objects to be connected, this test makes sure that there are enough objects to participate in the "connect" method.
+                for (var i = 0; i<col.length;i++){ // this gets the object associated with an id by looping through the col list. You need the object to run the method. The id is just an HTML element and won't help you none.
+                    if (col[i].id== evt.id){
+                        bin.push(col[i]);
+                    }
+                }
+            }
+
+            if (bin.length ==2){
+                var x1= bin[0].x;
+                var y1 = bin[0].y;
+                var x2 = bin[1].x;
+                var y2 = bin[1].y;
+                var nt = cou.toString()
+                var wire= new Con(x1,y1,x2,y2,0,"wire_" + nt);
+                wire.make();
+                h.connect(bin[0], wire.inputs);
+                h.connect(wire, bin[0].outputs)
+                h.connect(wire, bin[1].inputs)
+                h.connect(bin[1], wire.outputs);
+
+                bin =[];
+            }
+
+        })
+
+    })
+}
+
+
+
+bin = [];
+
+</script>
+</head>
+<body>
+<p id = "shp" >
+</p>
+<button id="woggle" value="Toggle Wiring" onclick="toggle()">Toggle Wiring</button>
+<button id="circ_tog" value ="Toggle Circ1 Making" onclick = "circ_tog()">Toggle Circ1 Making</button>
+<button id="not" value ="Toggle Not Making" onclick = "not_tog()">Toggle NOT Making</button>
+<button id="not02" value ="Toggle AND Making" onclick = "and_tog()">Toggle AND Making</button>
+<button id="or" value="Toggle OR Making" onclick="or_tog()">Toggle OR Making</button>
+</body>
+</html>

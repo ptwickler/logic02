@@ -9,14 +9,47 @@
 </style>
 <script src="jquery.js" type="text/javascript"></script>
 <script type="text/javascript">
+/*
+* This works like this: When instantiated, the this.bod() is called which figures out what states and colors should be
+* in effect based on the state of the input arrays (input01 and input02). Then, tell() is called. Tell calls all the
+* .bod() methods for all the objects in array col replaces the existing values (old states of the gates) with the new
+* values (new states of the gates). Tell calls control(). Control re-concatenates the Gate.body html and displays it on the
+* screen.
+*
+*/
     window.onload=init;
 
+    // This array is the model for the display. That is, it holds the existing gate objects. Other functions iterate
+    // through this array to read the states of those gates.
     var col = [];
 
-    function tell() {                                    //this is the function that updates .body html from the objects in col. It is called whenever a change is made like, "make()". Then it calls "control()" to display the changes.
-        for (var i = 0; i < col.length; i++) {
-            col[i].body = col[i].body;
-        };
+
+    // This function iterates through all the gates in array col and calls their .bod() method to update their states
+    // and the .body() property (the html for display).
+
+    function tell() {
+       for (var i = 0; i <col.length;i++){
+           col[i].bod();
+       }
+
+        control();
+    }
+
+    // Iterates through the array col and assembles a string of their
+    function control () {                          // this is the function that grabs the html ".body" from all the objects in the "col" array and collects them into the "circs" variable. It then pushes them into the HTML of the page, displaying the objects. the "nn()" function attaches the click handler to any new objects so they will be able to connect().
+        gates = "";
+        for (var i=0; i<col.length;i++){
+            gates +=col[i].body;
+        }
+
+        col_list = "<svg id = \"sop\" height=\"500\" width=\"900\" style=\"border: 1px solid red;\">" + gates + "</svg>";
+        var y = document.getElementById("shp");
+        y.innerHTML = col_list;
+
+
+
+        /*nn();*/
+
     }
 
     ct = 0;
@@ -25,42 +58,69 @@
 
 // For now, init() just creates a gate for testing purposes.
 //    TODO:Examine why does the control() function
-function init() {
-    var t = new Gate(0, 0, 0, 'init');
-    t.bod();
+    function init() {
+        var t = new Source(10, 10, 0, 'init');
+        t.make();
 
-    $('#shp').on('click',function(e){
+        var u = new Source(40,40,0,'init02');
+        u.make();
 
-                //Picks up the click event and uses the coordinates to create a new Gate.
-                var cx = e.pageX - document.getElementById("shp").offsetLeft;
-                var cy = e.pageY - document.getElementById("shp").offsetTop;
+        $('#shp').on('click',function(e){
 
-                var c = 0;
+                    //Picks up the click event and uses the coordinates to create a new Gate.
+                    var cx = e.pageX - document.getElementById("shp").offsetLeft;
+                    var cy = e.pageY - document.getElementById("shp").offsetTop;
+
+                    //var c = 0;
+
+                    var h = new Gate(cx,cy,0,'g_' + ct);
+
+                    h.make();
+
+                    ct++;
+                    control();
+                    tell();
+
+                }
+        );
+    }
 
 
+    function Source(x,y,state,id){
+        this.x = x;
+        this.y = y;
+        this.r = 10;
+        this.state = state;
+        this.id = id;
+        this.out_state = state;
 
-                var h = new Gate(cx,cy,0,'g_' + ct);
+        this.make = function(){
+            this.bod()
+            col.push(this);
 
-                h.bod();
+            tell();
+        };
 
-                ct++;
-                control();
-                tell();
+        this.bod = function(){
+
+
+            if (this.state == 0){
+                this.fill = 'blue';
+                this.out_state = 0;
 
             }
-    );
-}
 
-    /*function make(){
-     $('#sop').on('click',function(){
-     var cx = e.pageX - document.getElementById("shp").offsetLeft;
-     var cy = e.pageY  - document.getElementById("shp").offsetTop;
-     })
+            if (this.state == 1){
+                this.fill = 'red';
+                this.out_state = 1;
+            }
 
-     }*/
+            this.body = '<circle id = "' + this.id + '" cx = "' + this.x + '" cy = "' + this.y + '" r = "' + this.r + '" fill = "' + this.fill + '" />';
 
-    // bin is an array in which we will put the objects that are to be displayed on the screen.
+        }
 
+
+    }
 
     function Gate(x,y,state,id){
         this.x = x;
@@ -73,8 +133,18 @@ function init() {
         this.id = id;
         this.fill = "";
         this.body = "";
+        this.out_state = 0;
 
 
+        this.make = function(){
+            this.bod()
+            col.push(this);
+
+            tell();
+        };
+
+        // This connects the gate together. It pushes the output gate into the input array of the input gate. It first
+        // checks to see
         this.connect = function(gate_out, gate_in){
             if (gate_in.input01[0]){
                 gate_in.input02[0] = gate_out;
@@ -84,17 +154,23 @@ function init() {
                 gate_in.input01[0] = gate_out;
             }
 
-            else {
-             gate_in.input01[0] = gate_out;
+            else if(gate_in.input01[0] && gate_in.input02[0]){
+                console.log('full');
             }
-            this.bod();
+
+
+            else {
+                gate_in.input01[0] = gate_out;
+            }
+            tell();
         };
 
 
         this.bod = function(){
 
-            if (this.input01[0] && this.input02[0]){
+            if ((this.input01[0] && this.input01[0].out_state ==1)  && (this.input02[0] && this.input02[0].out_state == 1)){
                 this.state = 1;
+                this.out_state = 1;
             }
 
             else {
@@ -112,48 +188,14 @@ function init() {
 
             this.body = '<circle id = "' + this.id + '" cx = "' + this.x + '" cy = "' + this.y + '" r = "' + this.r + '" fill = "' + this.fill + '" />';
 
-            // This  push statement pushes the gate into the array (col) which is used as a register of all the gates
-            // extant on the screen. Then, control() updates the html for display and tell()
-
-
-
-            col.push(this);
-
-
-control();
-
 
         }
 
-
-
-
-
-//tells one gate to listen to the output of another, that is,
-        // it puts the output (gate_out) into the input (gate_in) of another gate. Then it calls the this.bod() to update
-        // the html of the object for display.
-
-
-
     }
 
 
 
-function control () {                          // this is the function that grabs the html ".body" from all the objects in the "col" array and collects them into the "circs" variable. It then pushes them into the HTML of the page, displaying the objects. the "nn()" function attaches the click handler to any new objects so they will be able to connect().
-    gates = "";
-    for (var i=0; i<col.length;i++){
-        gates +=col[i].body;
-    }
 
-    col_list = "<svg id = \"sop\" height=\"500\" width=\"900\" style=\"border: 1px solid red;\">" + gates + "</svg>";
-    var y = document.getElementById("shp");
-    y.innerHTML = col_list;
-
-    tell();
-
-    /*nn();*/
-
-}
 </script>
 </head>
 <body>

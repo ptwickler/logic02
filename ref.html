@@ -189,7 +189,7 @@ var Not  = function(x,y,r,state,id){
 
 
 
-    this.recieve = function (state) {
+    this.receive = function (state) {
         var temp  = state;
         if(temp == 0){
             this.state = 1;
@@ -205,7 +205,7 @@ var Not  = function(x,y,r,state,id){
 
     this.transmit= function(state){
         for (var i=0; i<this.outputs.length;i++) {
-            this.outputs[i].recieve(state);
+            this.outputs[i].receive(state);
             this.bod();
         }
     };
@@ -583,6 +583,7 @@ function line_e(e){
         ste=[];
     }
 }
+
 var cou = 0
 
 var chop=[];
@@ -723,9 +724,9 @@ bin = [];
 <p id = "shp" >
 </p>
 <button id="woggle" value="Toggle Wiring" onclick="toggle()">Toggle Wiring</button>
-<button id="circ_tog" value ="Toggle Circ1 Making" onclick = "circ_tog()">Toggle Circ1 Making</button>
+<button id="and_tog" value ="Toggle And Making" onclick = "and_tog()">Toggle AND Making</button>
 <button id="not" value ="Toggle Not Making" onclick = "not_tog()">Toggle NOT Making</button>
-<button id="not02" value ="Toggle AND Making" onclick = "and_tog()">Toggle AND Making</button>
+
 <button id="or" value="Toggle OR Making" onclick="or_tog()">Toggle OR Making</button>
 </body>
 </html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>
+        World
+    </title>
+
+    <meta charset = "UTF-8"/>
+    <link rel="stylesheet" href="con1.css">
+    <script src="./jquery.js" type="text/javascript"></script>
+    <script src="world.js"></script>
+</head>
+<body>
+<div id="base"></div>
+
+</body>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        var square_count = 10;
+
+        var base = document.getElementById('base');
+
+        var square = '<div class="square"></div>';
+        
+        var col_count = 9;
+
+       while (col_count >= 0){
+           square_count = 10;
+           while (square_count > 0) {
+               $('<div class="square" id = "in_row' + '_' + col_count + '"></div>', {"class":"square"}).appendTo('#base');
+
+               square_count--;
+           }
+
+           col_count--;
+       }
+var posx = 10;
+var posy = 10;
+
+
+        var row = 0;
+
+
+        while (row < 10) {
+            $.each($('div[id^="in_row_' + row +'"]'), function () {
+
+                $(this).css('top', posy);
+                $(this).css('left', posx);
+
+                posy += 41.5;
+
+            });
+
+            posy = 10.;
+            posx += 41.5;
+
+            row++;
+        }
+    });
+
+$(document).ready(function(){
+    $('div.square').on('click',function(){
+        $(this).css('background-color','red');
+    });
+});
+
+
+</script>
+</html>

@@ -91,6 +91,19 @@ function not_tog(){               //this turns on and off the simple And making 
 
 }
 
+function or_tog(){               //this turns on and off the simple And making function. I will adapt this to the new array of gate-making buttons.
+    if (wt%2==0){
+        $("#shp").attr("onmousedown", "or_e(event)");
+    }
+
+    if (wt%2!=0){
+        $("#shp").attr("onmousedown", "");
+    }
+
+    wt++;
+
+}
+
  ct = 0;
 
 function wire_toggle(){               //this turns on and off the old fashioned wire-making function. I will adapt this to the new array of gate-making buttons.
@@ -270,6 +283,8 @@ function wire_toggle(){               //this turns on and off the old fashioned 
 
     }
 
+
+
 function Not(x,y,state,id){
     this.x = x;
     this.y = y;
@@ -339,6 +354,98 @@ function Not(x,y,state,id){
         }
 
     }
+
+}
+
+function Or(x,y,state,id){
+    this.x = x;
+    this.y = y;
+    this.r = 30;
+    this.input01 = [];
+    this.input02 = [];
+    this.output = [];
+    this.state = state;
+    this.id = id;
+    this.fill = "";
+    this.body = "";
+    this.out_state = 0;
+
+
+    this.make = function(){
+        this.bod()
+        col.push(this);
+
+
+        tell();
+
+
+    };
+
+    // This connects the gate together. It pushes the output gate into the input array of the input gate. It first
+    // checks to see
+    this.connect = function(gate_out, gate_in){
+        if (gate_in.input01[0]){
+            gate_in.input02[0] = gate_out;
+
+        }
+
+        else if(gate_in.input02 && gate_in.input02[0]){
+            gate_in.input01[0] = gate_out;
+        }
+
+        else if(gate_in.input01[0] && gate_in.input02[0]){
+            console.log('full');
+        }
+
+
+        else {
+            gate_in.input01[0] = gate_out;
+        }
+        tell();
+    };
+
+
+    this.bod = function(){
+
+        if ((this.input01[0] && this.input01[0].out_state ==1)  ||  (this.input02[0] && this.input02[0].out_state == 1)){
+            this.state = 1;
+            this.out_state = 1;
+        }
+
+        else {
+            this.state = 0;
+            this.out_state = 0;
+        }
+
+        if (this.state == 0){
+
+            this.out_state = 0;
+            this.fill = 'blue';
+
+        }
+
+        if (this.state == 1){
+            this.fill = 'red';
+        }
+
+        this.body = '<circle id = "' + this.id + '" cx = "' + this.x + '" cy = "' + this.y + '" r = "' + this.r + '" class=\"put\" fill = "' + this.fill + '" />';
+
+
+
+        if (this.state != this.out_state){
+            tell();
+        }
+
+
+        this.prop = function(){
+            for (var i = 0; i<col.length; i++){
+                tell();
+            }
+        }
+
+    }
+
+
 
 }
 
@@ -452,6 +559,25 @@ function not_e(e){
 
     var nt = String(cou)
     var n = new Not(x1,y1,0, "not" + nt);
+    n.make();
+    cou++;
+    chop=[];
+
+}
+
+function or_e(e){
+
+    var cx = e.pageX - document.getElementById("shp").offsetLeft;
+    var cy = e.pageY  - document.getElementById("shp").offsetTop;
+
+    chop.push(cx);
+    chop.push(cy);
+
+    var x1 = chop[0];
+    var y1 = chop[1];
+
+    var nt = String(cou)
+    var n = new Or(x1,y1,0, "not" + nt);
     n.make();
     cou++;
     chop=[];

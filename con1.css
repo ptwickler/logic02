@@ -10,3 +10,10 @@
 
 }
 
+.wall {
+    background-color: black;
+}
+
+.puzzle {
+    background-color: red;
+}

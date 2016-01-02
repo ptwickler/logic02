@@ -17,3 +17,17 @@
 .puzzle {
     background-color: red;
 }
+
+
+.player {
+    width: 20px;
+    height: 20px;
+    position: relative;
+
+    padding: auto;
+    margin-top: 10px;
+    margin-left: 10px;
+
+    border: 1px solid black;
+    border-radius: 10px;
+}

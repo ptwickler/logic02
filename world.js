@@ -1,3 +1,6 @@
+
+
+// This function draws the map. Right now it's just hard-coded. May consider an algorithm later.
 $(document).ready(function(){
     var square_count = 10;
 
@@ -29,6 +32,7 @@ $(document).ready(function(){
 
     var col = 0;
 
+    // Sets the top and left attributes to create grid.
     while (col < 10) {
         $.each($('div[id^="in_col_' + col +'"]'), function () {
 
@@ -63,7 +67,6 @@ $(document).ready(function(){
     $('.square#in_col_3_1').addClass('wall');
     $('.square#in_col_1_3').addClass('wall');
     $('.square#in_col_2_3').addClass('wall');
-    $('.square#in_col_1_3').addClass('wall');
     $('.square#in_col_3_3').addClass('wall');
     $('.square#in_col_4_3').addClass('wall');
     $('.square#in_col_4_1').addClass('wall');
@@ -75,4 +78,31 @@ $(document).ready(function(){
 
     });
 
+var p1 = new Player();
+
+
+$(document).ready(function() {
+    $('#in_col_1_0').html(p1.body);
+});
+   // Attaches the movement event listener to the player and handles the movement.
+    $(document).ready(
+        function(){
+            $(document).on('keydown',function(event){
+
+             if (event.which == 87){
+
+             }
+
+                var move_match = $('.player').parent().attr('id').match(/_(\d+)_(\d+)/);
+
+
+    console.log(move_match);
+
+
+
+
+
+            });
+        }
+    );
 

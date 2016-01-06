@@ -154,6 +154,8 @@ $(document).ready(function() {
 
 
             });
-        }
+
+            //TODO: ADD wall and puzzle detection here.
+            }
     );
 

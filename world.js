@@ -90,16 +90,67 @@ $(document).ready(function() {
             $(document).on('keydown',function(event){
 
              if (event.which == 87){
+                 var move_match = $('.player').parent().attr('id').match(/_(\d+)_(\d+)/);
+                 console.log(move_match);
+                 var x_pos = move_match[1];
+                 var y_pos = parseInt(move_match[2]);
+
+                 console.log(x_pos + ',' + y_pos);
+                 console.log ('#in_col_' + move_match[1] + '_' + String(y_pos +1));
+
+                 $('.player').parent().html('');
+
+                 $('#in_col_' + move_match[1] + '_' + String(y_pos + 1)).html(p1.body);
 
              }
 
+            if (event.which == 83){
                 var move_match = $('.player').parent().attr('id').match(/_(\d+)_(\d+)/);
+                console.log(move_match);
+                var x_pos = parseInt(move_match[1]);
+                var y_pos = parseInt(move_match[2]);
+
+                console.log(x_pos + ',' + y_pos);
+                console.log ('#in_col_' +String(x_pos) + '_' + String(y_pos - 1));
+
+                $('.player').parent().html('');
+
+                $('#in_col_' + move_match[1] + '_' + String(y_pos - 1)).html(p1.body);
+
+            }
 
 
-    console.log(move_match);
+                // 'A' key, move left
+                if (event.which == 65){
+                    var move_match = $('.player').parent().attr('id').match(/_(\d+)_(\d+)/);
+                    console.log(move_match);
+                    var x_pos = parseInt(move_match[1]);
+                    var y_pos = parseInt(move_match[2]);
 
+                    console.log(x_pos + ',' + y_pos);
+                    console.log ('#in_col_' + String(x_pos -1) + '_' + String(y_pos));
 
+                    $('.player').parent().html('');
 
+                    $('#in_col_' + String(x_pos -1) + '_' + String(y_pos)).html(p1.body);
+
+                }
+
+// 'D' key, move right
+                if (event.which == 68){
+                    var move_match = $('.player').parent().attr('id').match(/_(\d+)_(\d+)/);
+                    console.log(move_match);
+                    var x_pos = parseInt(move_match[1]);
+                    var y_pos = parseInt(move_match[2]);
+
+                    console.log(x_pos + ',' + y_pos);
+                    console.log ('#in_col_' + String(x_pos + 1) + '_' + String(y_pos));
+
+                    $('.player').parent().html('');
+
+                    $('#in_col_' + String(x_pos + 1) + '_' + String(y_pos)).html(p1.body);
+
+                }
 
 
             });

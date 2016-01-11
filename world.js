@@ -1,5 +1,33 @@
 
 
+
+
+// Tests the square that the player is going to move into and determines how to handle it, i.e. nothing (wall), start
+// a puzzle (puzzle) or move into the square (blank)
+function moveTest(element) {
+    console.log(element);
+    var $targetElement = $(element);
+    console.log($targetElement);
+
+
+
+    if ($targetElement.hasClass('wall')){
+
+        return '0'; // Target square is a wall, do nothing (maybe I'll add in a sound effect later).
+    }
+
+   else if ($targetElement.hasClass('puzzle')){
+
+        return '1'; // Target square is a puzzle, launch puzzle interface
+    }
+
+    else {
+        return '2'; // No obstacle or other special case, move into square.
+
+    }
+
+}
+
 // This function draws the map. Right now it's just hard-coded. May consider an algorithm later.
 $(document).ready(function(){
     var square_count = 10;
@@ -50,13 +78,8 @@ $(document).ready(function(){
     }
 });
 
-//$(document).ready(function(){
-//    $('div.square').on('click',function(){
-//        $(this).css('background-color','red');
-//    });
-//});
 
-// This draws the map and grid.
+// This draws the map and grid. It's arbitrary for now.
 $(document).ready(function(){
     $('.square#in_col_0_0').addClass('wall');
     $('.square#in_col_0_1').addClass('wall');
@@ -82,80 +105,86 @@ var p1 = new Player();
 
 
 $(document).ready(function() {
-    $('#in_col_1_0').html(p1.body);
+    $('#in_col_1_0').html(p1.body); // Instantiates the player on the board.
 });
    // Attaches the movement event listener to the player and handles the movement.
     $(document).ready(
         function(){
             $(document).on('keydown',function(event){
 
-             if (event.which == 87){
-                 var move_match = $('.player').parent().attr('id').match(/_(\d+)_(\d+)/);
-                 console.log(move_match);
-                 var x_pos = move_match[1];
-                 var y_pos = parseInt(move_match[2]);
+                var moveMod = 0;
+                var moveString = '#in_col_';
 
-                 console.log(x_pos + ',' + y_pos);
-                 console.log ('#in_col_' + move_match[1] + '_' + String(y_pos +1));
+                //TODO: Change the switch to create the entire string for movement, otherwise, it can only
+                // change one axis' location.
 
-                 $('.player').parent().html('');
-
-                 $('#in_col_' + move_match[1] + '_' + String(y_pos + 1)).html(p1.body);
-
-             }
-
-            if (event.which == 83){
                 var move_match = $('.player').parent().attr('id').match(/_(\d+)_(\d+)/);
-                console.log(move_match);
                 var x_pos = parseInt(move_match[1]);
                 var y_pos = parseInt(move_match[2]);
 
-                console.log(x_pos + ',' + y_pos);
-                console.log ('#in_col_' +String(x_pos) + '_' + String(y_pos - 1));
+                switch (event.which){
+                    case 87: //Moves up "w" key
+                        moveMod = 1;
 
-                $('.player').parent().html('');
+                        moveString += String(x_pos) + '_' + String(y_pos + moveMod);
 
-                $('#in_col_' + move_match[1] + '_' + String(y_pos - 1)).html(p1.body);
+                        break;
 
+                    case 83: // Moves down "s" key.
+                        moveMod = -1;
+
+                        moveString += String(x_pos) + '_' + String(y_pos + moveMod);
+
+                        break;
+
+                    case 65: // Moves left "a" key
+                        moveMod = -1;
+
+                        moveString += String(x_pos + moveMod) + '_' + String(y_pos);
+
+                        break;
+
+                    case 68: // Moves right "d" key
+                        moveMod = 1;
+
+                        moveString += String(x_pos + moveMod) + '_' + String(y_pos);
+
+                        break;
+
+                    default:
+                        console.log('broke');
+
+                }
+
+                 var moveTest = $(moveString);
+
+                console.log (moveTest);
+
+                //Prevents movement through walls
+                 if(moveTest.hasClass('wall')){
+                     moveString = $('.player').parent().attr('id');
+                     console.log("has wall");
+                 }
+
+                 //Tests to see if a puzzle has been entered into.
+                 else if(moveTest.hasClass('puzzle')){
+                     $('.player').parent().html('');
+
+                     $(moveString).html(p1.body);
+
+                     alert('NOW PUZZLE!!!');
+
+                 }
+                else {
+                     $('.player').parent().html('');
+
+                     $(moveString).html(p1.body);
+                 }
             }
 
-
-                // 'A' key, move left
-                if (event.which == 65){
-                    var move_match = $('.player').parent().attr('id').match(/_(\d+)_(\d+)/);
-                    console.log(move_match);
-                    var x_pos = parseInt(move_match[1]);
-                    var y_pos = parseInt(move_match[2]);
-
-                    console.log(x_pos + ',' + y_pos);
-                    console.log ('#in_col_' + String(x_pos -1) + '_' + String(y_pos));
-
-                    $('.player').parent().html('');
-
-                    $('#in_col_' + String(x_pos -1) + '_' + String(y_pos)).html(p1.body);
-
-                }
-
-// 'D' key, move right
-                if (event.which == 68){
-                    var move_match = $('.player').parent().attr('id').match(/_(\d+)_(\d+)/);
-                    console.log(move_match);
-                    var x_pos = parseInt(move_match[1]);
-                    var y_pos = parseInt(move_match[2]);
-
-                    console.log(x_pos + ',' + y_pos);
-                    console.log ('#in_col_' + String(x_pos + 1) + '_' + String(y_pos));
-
-                    $('.player').parent().html('');
-
-                    $('#in_col_' + String(x_pos + 1) + '_' + String(y_pos)).html(p1.body);
-
-                }
+);
 
 
-            });
-
-            //TODO: ADD wall and puzzle detection here.
             }
     );
 

@@ -1,33 +1,6 @@
 
 
 
-
-// Tests the square that the player is going to move into and determines how to handle it, i.e. nothing (wall), start
-// a puzzle (puzzle) or move into the square (blank)
-function moveTest(element) {
-    console.log(element);
-    var $targetElement = $(element);
-    console.log($targetElement);
-
-
-
-    if ($targetElement.hasClass('wall')){
-
-        return '0'; // Target square is a wall, do nothing (maybe I'll add in a sound effect later).
-    }
-
-   else if ($targetElement.hasClass('puzzle')){
-
-        return '1'; // Target square is a puzzle, launch puzzle interface
-    }
-
-    else {
-        return '2'; // No obstacle or other special case, move into square.
-
-    }
-
-}
-
 // This function draws the map. Right now it's just hard-coded. May consider an algorithm later.
 $(document).ready(function(){
     var square_count = 10;
@@ -115,12 +88,17 @@ $(document).ready(function() {
                 var moveMod = 0;
                 var moveString = '#in_col_';
 
-                //TODO: Change the switch to create the entire string for movement, otherwise, it can only
-                // change one axis' location.
+/*if ($('.player').parent()){
+    console.log($('.player').parent());
+    var gmatch = $('.player').parent().attr('id');
 
-                var move_match = $('.player').parent().attr('id').match(/_(\d+)_(\d+)/);
+}*/
+
+                  var move_match  =  $('.player').parent().attr('id').match(/_(\d+)_(\d+)/);
+
                 var x_pos = parseInt(move_match[1]);
                 var y_pos = parseInt(move_match[2]);
+
 
                 switch (event.which){
                     case 87: //Moves up "w" key
@@ -156,31 +134,56 @@ $(document).ready(function() {
 
                 }
 
+
+                // The next chunk or two of code handle the movement through the maze, they test the player's target
+                // square and either do nothing, if it's a wall, move into and launch a puzzle, if it's puzzle square,
+                // or just move the player if it's a normal hallway square.
+
                  var moveTest = $(moveString);
 
-                console.log (moveTest);
+                console.log(moveTest);
 
-                //Prevents movement through walls
-                 if(moveTest.hasClass('wall')){
-                     moveString = $('.player').parent().attr('id');
-                     console.log("has wall");
-                 }
+
+
+
+
+
+
 
                  //Tests to see if a puzzle has been entered into.
-                 else if(moveTest.hasClass('puzzle')){
+                  if(moveTest.hasClass('puzzle')){
                      $('.player').parent().html('');
 
                      $(moveString).html(p1.body);
 
-                     alert('NOW PUZZLE!!!');
+                     alert('NOW PUZZLE!!!');// TODO: Insert puzzle launching code here.
 
                  }
-                else {
+
+                //Prevents movement through walls
+                else if(moveTest.hasClass('wall')){
+                    moveString = $('.player').parent().attr('id');
+                    console.log("has wall");
+                }
+
+
+               // Moves the player to the next square if everything checks out (that is the square is not either
+               // out of bounds or a wall.
+                else if (moveTest.hasClass('square')) {
                      $('.player').parent().html('');
 
                      $(moveString).html(p1.body);
                  }
-            }
+
+
+
+                  //Tests to make see if target is out of bounds. If so, no movement.
+                   else if (!moveTest.hasClass('square')){
+                        moveString = $('.player').parent().attr('id');
+                        console.log("out of bounds");
+                    }
+
+                }
 
 );
 

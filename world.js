@@ -44,7 +44,7 @@ $(document).ready(function(){
 
         });
 
-        posy = 10.;
+        posy = 10;
         posx += 41.5;
 
         col++;
@@ -71,6 +71,11 @@ $(document).ready(function(){
     $('.square#in_col_6_2').addClass('wall');
     $('.square#in_col_4_4').addClass('wall');
     $('.square#in_col_3_2').addClass('puzzle');
+    $('.square#in_col_6_3').addClass('wall');
+    $('.square#in_col_6_4').addClass('wall');
+    $('.square#in_col_4_5').addClass('wall');
+
+
 
     });
 
@@ -99,7 +104,8 @@ $(document).ready(function() {
                 var x_pos = parseInt(move_match[1]);
                 var y_pos = parseInt(move_match[2]);
 
-
+                // This switch statement processes the keystroke from the user and modifies moveMod to produce the
+                // correct movement on the board.
                 switch (event.which){
                     case 87: //Moves up "w" key
                         moveMod = 1;
@@ -141,13 +147,7 @@ $(document).ready(function() {
 
                  var moveTest = $(moveString);
 
-                console.log(moveTest);
-
-
-
-
-
-
+                /*console.log(moveTest);*/
 
 
                  //Tests to see if a puzzle has been entered into.
@@ -163,7 +163,7 @@ $(document).ready(function() {
                 //Prevents movement through walls
                 else if(moveTest.hasClass('wall')){
                     moveString = $('.player').parent().attr('id');
-                    console.log("has wall");
+                    /*console.log("has wall");*/
                 }
 
 
@@ -180,7 +180,7 @@ $(document).ready(function() {
                   //Tests to make see if target is out of bounds. If so, no movement.
                    else if (!moveTest.hasClass('square')){
                         moveString = $('.player').parent().attr('id');
-                        console.log("out of bounds");
+
                     }
 
                 }

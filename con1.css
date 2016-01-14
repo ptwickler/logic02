@@ -6,9 +6,11 @@
     border: 1px solid black;
     height: 40px;
     width: 40px;
-    position: absolute;
-    clear: both;
+    float: left;
+}
 
+.newRow {
+    clear: both;
 }
 
 .wall {
@@ -32,3 +34,4 @@
     border: 1px solid black;
     border-radius: 20px;
 }
+

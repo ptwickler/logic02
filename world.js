@@ -3,77 +3,61 @@
 
 // This function draws the map. Right now it's just hard-coded. May consider an algorithm later.
 $(document).ready(function(){
-    var square_count = 10;
 
-    var base = document.getElementById('base');
-
-    var square = '<div class="square"></div>';
-
-    var col_count = 9;
+    var col_count = 10;// Sets the number of columns
+    var row_count = 10; //sets the number of rows
+    var base = $('#base');
+    /*var square = '<div class="square"></div>';*/
 
 
-     // These nested while loops build the game grid. Col_count and square_count are counters that both limit the loop
-     // and form the id's of the boxes in the grid. We use the ids later to "draw" the walls and rooms of
-     // the level.
-    while (col_count >= 0){ //Outer loops controls the columns.
-        square_count = 9;
+    //TODO: TRY CHANGING THE ID STRINGS TO col_count - j or whatever to restore grid orientation.
+    for(var i = 0; i < col_count; i++) {
+        for (var j = 0; j < row_count; j++) {
 
-        while (square_count >= 0) { // Inner loop controls the cells in each column.
-            $('<div class="square" id = "in_col' + '_' + col_count + '_' + square_count +'"></div>', {"class":"square"}).appendTo('#base');
-
-            square_count--;
+            var square = '<div class="square" id = "in_col' + '_' + j + '_' + i +'"></div>';
+            var tile = $(square);
+            if (j === 0) tile.addClass('newRow');
+            base.append(tile);
         }
 
-        col_count--;
     }
 
-    var posx = 10;
-    var posy = 10;
-
-
-    var col = 0;
-
-    // Sets the top and left attributes to create grid.
-    while (col < 10) {
-        $.each($('div[id^="in_col_' + col +'"]'), function () {
-
-            $(this).css('top', posy);
-            $(this).css('left', posx);
-
-            posy += 41.5;
-
-        });
-
-        posy = 10;
-        posx += 41.5;
-
-        col++;
-    }
 });
 
 
 // This draws the map and grid. It's arbitrary for now.
 $(document).ready(function(){
-    $('.square#in_col_0_0').addClass('wall');
-    $('.square#in_col_0_1').addClass('wall');
-    $(".square#in_col_0_2").addClass('wall');
-    $('.square#in_col_0_3').addClass('wall');
-    $('.square#in_col_2_0').addClass('wall');
-    $('.square#in_col_2_1').addClass('wall');
-    $('.square#in_col_3_1').addClass('wall');
-    $('.square#in_col_1_3').addClass('wall');
-    $('.square#in_col_2_3').addClass('wall');
-    $('.square#in_col_3_3').addClass('wall');
-    $('.square#in_col_4_3').addClass('wall');
-    $('.square#in_col_4_1').addClass('wall');
-    $('.square#in_col_5_1').addClass('wall');
-    $('.square#in_col_6_1').addClass('wall');
-    $('.square#in_col_6_2').addClass('wall');
+    $('.square#in_col_0_10').addClass('wall');
+    $('.square#in_col_0_9').addClass('wall');
+    $(".square#in_col_0_8").addClass('wall');
+    $('.square#in_col_0_7').addClass('wall');
+    $('.square#in_col_2_5').addClass('wall');
+    $('.square#in_col_2_4').addClass('wall');
+    $('.square#in_col_1_4').addClass('wall');
+
+    $('.square#in_col_2_9').addClass('wall');
+    $('.square#in_col_2_8').addClass('wall');
+    $('.square#in_col_0_6').addClass('wall');
+    $('.square#in_col_1_6').addClass('wall');
+    $('.square#in_col_2_6').addClass('wall');
+    $('.square#in_col_3_8').addClass('wall');
+    $('.square#in_col_4_6').addClass('wall');
+    $('.square#in_col_4_8').addClass('wall');
+    $('.square#in_col_4_7').addClass('wall');
     $('.square#in_col_4_4').addClass('wall');
-    $('.square#in_col_3_2').addClass('puzzle');
-    $('.square#in_col_6_3').addClass('wall');
-    $('.square#in_col_6_4').addClass('wall');
+    $('.square#in_col_4_3').addClass('wall');
+    $('.square#in_col_4_2').addClass('wall');
+    $('.square#in_col_3_2').addClass('wall');
+    $('.square#in_col_2_2').addClass('wall');
+    $('.square#in_col_1_2').addClass('wall');
+
+    $('.square#in_col_3_6').addClass('puzzle');
     $('.square#in_col_4_5').addClass('wall');
+
+    $('.square#in_col_2_3').addClass('puzzle');
+
+    $('.square#in_col_0_2').addClass('wall');
+    $('.square#in_col_0_4').addClass('wall');
 
 
 
@@ -83,7 +67,7 @@ var p1 = new Player();
 
 
 $(document).ready(function() {
-    $('#in_col_1_0').html(p1.body); // Instantiates the player on the board.
+    $('#in_col_1_9').html(p1.body); // Instantiates the player on the board.
 });
    // Attaches the movement event listener to the player and handles the movement.
     $(document).ready(
@@ -108,14 +92,14 @@ $(document).ready(function() {
                 // correct movement on the board.
                 switch (event.which){
                     case 87: //Moves up "w" key
-                        moveMod = 1;
+                        moveMod = -1;
 
                         moveString += String(x_pos) + '_' + String(y_pos + moveMod);
 
                         break;
 
                     case 83: // Moves down "s" key.
-                        moveMod = -1;
+                        moveMod = 1;
 
                         moveString += String(x_pos) + '_' + String(y_pos + moveMod);
 
@@ -129,7 +113,7 @@ $(document).ready(function() {
                         break;
 
                     case 68: // Moves right "d" key
-                        moveMod = 1;
+                        moveMod = +1;
 
                         moveString += String(x_pos + moveMod) + '_' + String(y_pos);
 

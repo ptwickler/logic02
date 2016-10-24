@@ -42,7 +42,6 @@ function Wire(x1,y1,x2,y2,state,id){
 
     };
 
-
     this.bod = function () {
         if (this.input01[0] && this.input01[0].out_state == 1) {
             this.state = 1;
@@ -63,7 +62,6 @@ function Wire(x1,y1,x2,y2,state,id){
             this.fill = 'red';
         }
         this.body = "<line x1 = \"" + this.x1 + "\" y1 = \"" + this.y1 + "\" x2 = \"" + this.x2 + "\" y2 = \"" + this.y2 + "\" style=\"stroke-width: 2px; stroke: " + this.fill + "\" id = \"" + this.id + "\"/>";
-
 
         if (this.state != this.out_state){
             tell();

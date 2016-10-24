@@ -12,7 +12,7 @@
      * screen.
      *
      */
-window.onload=init;
+
 
 // This array is the model for the display. That is, it holds the existing gate objects. Other functions iterate
 // through this array to read the states of those gates.
@@ -56,8 +56,8 @@ function control () {
         gates +=col[i].body;
     }
 
-    col_list = "<svg id = \"sop\" height=\"600\" width=\"6" + "00\" style=\"border: 1px solid red;\">" + gates + "</svg>";
-    var y = document.getElementById("shp");
+    col_list = "<svg id = \"sop\" height=\"400\" width=\"6" + "00\" style=\"border: 1px solid red;\">" + gates + "</svg>";
+    var y = document.getElementById("puzzle_launch");
     y.innerHTML = col_list;
 
     link();
@@ -66,11 +66,11 @@ function control () {
 
 function and_tog(){               //this turns on and off the simple And making function. I will adapt this to the new array of gate-making buttons.
     if (wt%2==0){
-        $("#shp").attr("onmousedown", "and_e(event)");
+        $("#puzzle_launch").attr("onmousedown", "and_e(event)");
     }
 
     if (wt%2!=0){
-        $("#shp").attr("onmousedown", "");
+        $("#puzzle_launch").attr("onmousedown", "");
     }
 
     wt++;
@@ -79,11 +79,11 @@ function and_tog(){               //this turns on and off the simple And making 
 
 function not_tog(){               //this turns on and off the simple And making function. I will adapt this to the new array of gate-making buttons.
     if (wt%2==0){
-        $("#shp").attr("onmousedown", "not_e(event)");
+        $("#puzzle_launch").attr("onmousedown", "not_e(event)");
     }
 
     if (wt%2!=0){
-        $("#shp").attr("onmousedown", "");
+        $("#puzzle_launch").attr("onmousedown", "");
     }
 
     wt++;
@@ -93,11 +93,11 @@ function not_tog(){               //this turns on and off the simple And making 
 //this turns on and off the simple And making function.
 function or_tog(){
     if (wt%2==0){
-        $("#shp").attr("onmousedown", "or_e(event)");
+        $("#puzzle_launch").attr("onmousedown", "or_e(event)");
     }
 
     if (wt%2!=0){
-        $("#shp").attr("onmousedown", "");
+        $("#puzzle_launch").attr("onmousedown", "");
     }
 
     wt++;
@@ -110,11 +110,11 @@ ct = 0;
 // This turns on and off the old fashioned wire-making function. I will adapt this to the new array of gate-making buttons.
 function wire_toggle(){
     if (wt%2==0){
-        $("#shp").attr("onmousedown", "line_e(event)");
+        $("#puzzle_launch").attr("onmousedown", "line_e(event)");
     }
 
     if (wt%2!=0){
-        $("#shp").attr("onmousedown", "");
+        $("#puzzle_launch").attr("onmousedown", "");
     }
 
     wt++;
@@ -514,10 +514,12 @@ var cou = 0
 var chop=[];
 
 // This function creates a new And gate when the screen is clicked.
-function and_e(e){
+function and_e(event){
 
-    var cx = e.pageX - document.getElementById("shp").offsetLeft;
-    var cy = e.pageY  - document.getElementById("shp").offsetTop;
+
+
+    var cx = event.pageX - document.getElementById("puzzle_launch").offsetLeft;
+    var cy = event.pageY  - document.getElementById("puzzle_launch").offsetTop;
 
     chop.push(cx);
     chop.push(cy);
@@ -535,8 +537,8 @@ function and_e(e){
 
 function not_e(e){
 
-    var cx = e.pageX - document.getElementById("shp").offsetLeft;
-    var cy = e.pageY  - document.getElementById("shp").offsetTop;
+    var cx = e.pageX - document.getElementById("puzzle_launch").offsetLeft;
+    var cy = e.pageY  - document.getElementById("puzzle_launch").offsetTop;
 
     chop.push(cx);
     chop.push(cy);
@@ -554,8 +556,8 @@ function not_e(e){
 
 function or_e(e){
 
-    var cx = e.pageX - document.getElementById("shp").offsetLeft;
-    var cy = e.pageY  - document.getElementById("shp").offsetTop;
+    var cx = e.pageX - document.getElementById("puzzle_launch").offsetLeft;
+    var cy = e.pageY  - document.getElementById("puzzle_launch").offsetTop;
 
     chop.push(cx);
     chop.push(cy);

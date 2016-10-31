@@ -7,9 +7,6 @@ $(document).ready(function(){
     var col_count = 10;// Sets the number of columns
     var row_count = 10; //sets the number of rows
     var base = $('#base');
-    /*var square = '<div class="square"></div>';*/
-
-
 
     for(var i = 0; i < col_count; i++) {
         for (var j = 0; j < row_count; j++) {
@@ -18,8 +15,6 @@ $(document).ready(function(){
             var tile = $(square);
             if (j === 0) tile.addClass('newRow');
             base.append(tile);
-
-
         }
 
     }
@@ -57,9 +52,7 @@ $(document).ready(function(){
     $('.square#in_col_0_2').addClass('wall');
     $('.square#in_col_0_4').addClass('wall');
     $('.square#in_col_1_8').addClass('puzzle');
-
-
-    });
+});
 
 var p1 = new Player();
 
@@ -75,21 +68,12 @@ $(document).ready(function() {
                 var moveMod = 0;
                 var moveString = '#in_col_';
 
-/*if ($('.player').parent()){
-    console.log($('.player').parent());
-    var gmatch = $('.player').parent().attr('id');
-
-}*/
-
                 var move_match  =  $('.player').parent().attr('id').match(/_(\d+)_(\d+)/);
 
                 var x_pos = parseInt(move_match[1]);
                 var y_pos = parseInt(move_match[2]);
-                var parent_cell = "#in_col_" + move_match[1] + "_" + move_match[2];
 
-                // Log statements for testing/dev.
-                //console.log("x: " + x_pos);
-                //console.log("y: " + y_pos);
+
 
                 // This switch statement processes the keystroke from the user and modifies moveMod to produce the
                 // correct movement on the board.
@@ -135,6 +119,13 @@ $(document).ready(function() {
                 console.log("moveTest After Keypress: " + moveString);
                 var moveTest = $(moveString);
 
+                    //Tests to make see if target is out of bounds. If so, no movement.
+                    if (!moveTest.hasClass('square')) {
+                        moveString = $('.player').parent();
+                        $(moveString).html(p1.body);
+
+                    };
+
                 //Tests to see if a puzzle has been entered into.
                 if(moveTest.hasClass('puzzle')){
                     $('.player').parent().html('');
@@ -152,57 +143,35 @@ $(document).ready(function() {
                   }
 
 
-                //Prevents movement through walls
-                /*
 
+                /*
+                 Prevents movement through walls
                  */
                   if(moveTest.hasClass('wall')){
                       moveString = $('.player').parent();
-                     // console.log('parent?: ' + moveString);
                       $(moveString).html(p1.body);
-
-
-                    //console.log(moveString);
                 }
 
 
                // Moves the player to the next square if everything checks out (that is the square is not either
                // out of bounds or a wall.
-                else if (moveTest.hasClass('square')) {
-                   //  $('.player').parent().html('');
-
+                 if (moveTest.hasClass('square')) {
                     $(moveString).html(p1.body);
                  }
 
 
 
-                  //Tests to make see if target is out of bounds. If so, no movement.
-                   else if (!moveTest.hasClass('square')){
-                        moveString = $('.player').parent().attr('id');
-                    $(moveString).html(p1.body);
-
-                    }
-
-                else {
-                    var HH = 1;
-                };
-
                 }
             );
-
-
         }
     );
 
 
 function puzzle_launch(){
+    var newPuzz = new Puzzle();
 
     $('body').append('<div id="puzzle_launch"></div><div id="control_panel">    <button id="woggle" value="Toggle Wiring" onclick="wire_toggle()">Toggle Wiring</button><button id="circ_tog" value ="Toggle AND Making" onclick = "and_tog(event)">Toggle AND Making</button><button id="not" value ="Toggle Not Making" onclick = "not_tog()">Toggle NOT Making</button></div>');
     $('#baseScreen').addClass('baseDisable');
-
-
-     /*$('body').append('<button id="circ_tog" value ="Toggle Circ1 Making" onclick = "and_tog(event)">Toggle Circ1 Making</button>');*/
-    /*$('body').append('<button id="not" value ="Toggle Not Making" onclick = "not_tog()">Toggle NOT Making</button>');*/
 
     init();
 }

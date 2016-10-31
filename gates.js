@@ -146,6 +146,8 @@ function Source(x,y,state,id){
     this.state = state;
     this.id = id;
     this.out_state = state;
+    this.goal=0;
+    this.goal_state=0;
 
     this.make = function(){
         this.bod()
